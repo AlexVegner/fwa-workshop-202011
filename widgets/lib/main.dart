@@ -2,10 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:widgets/pages/home_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatefulWidget {
+  App({Key key}) : super(key: key);
+
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  bool isLogged = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,6 +23,12 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: HomePage());
+        home: HomePage(
+          callback: (bool value) {
+            setState(() {
+              isLogged = value;
+            });
+          },
+        ));
   }
 }
