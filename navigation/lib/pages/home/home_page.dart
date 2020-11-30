@@ -1,65 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:widgets/pages/about/about_page.dart';
 import 'package:widgets/widgets/buttons/common_button.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title = '', this.isLogged, this.callback})
-      : super(key: key);
+  HomePage({Key key, this.title = ''}) : super(key: key);
 
   final String title;
-  final bool isLogged;
-  final ValueChanged<bool> callback;
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class User {
-  String firstName;
-  String lastName;
-}
-
-class Cleckbox extends StatefulWidget {
-  final bool isSelected;
-  final ValueChanged<bool> onChanged;
-  Cleckbox({Key key, @required this.isSelected, @required this.onChanged})
-      : super(key: key);
-
-  @override
-  _CleckboxState createState() => _CleckboxState();
-}
-
-class _CleckboxState extends State<Cleckbox> {
-  bool isSelected;
-
-  @override
-  void initState() {
-    super.initState();
-    isSelected = widget.isSelected;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        final newSetState = !isSelected;
-        setState(() {
-          isSelected = newSetState;
-        });
-        widget.onChanged(newSetState);
-      },
-      child: Container(
-        height: 100,
-        width: 100,
-        color: isSelected ? Colors.red : Colors.blue,
-      ),
-    );
-  }
-}
-
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
-  User user;
-  bool _isSelected = false;
 
   TextEditingController _textController;
 
@@ -74,18 +27,6 @@ class _HomePageState extends State<HomePage> {
           _counter = 10;
         });
       }
-      _counter = 10;
-    });
-  }
-
-  Future<void> withDelay() async {
-    await Future.delayed(Duration(seconds: 10)).then((value) {
-      if (mounted) {
-        setState(() {
-          _counter = 10;
-        });
-      }
-      _counter = 10;
     });
   }
 
@@ -102,17 +43,49 @@ class _HomePageState extends State<HomePage> {
     print(_textController);
   }
 
+  void _openAboutPage() async {
+    // bool val = await Navigator.of(context)
+    //     .push(MaterialPageRoute(builder: (BuildContext context) {
+    //   return AboutPage();
+    // }));
+    bool val = await Navigator.pushNamed(context, '/about') as bool;
+
+    // /about
+    print(val);
+  }
+
+  _openSettingsPage() {
+    Navigator.of(context).pushNamed('/settings');
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => AboutPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var tween = Tween(begin: begin, end: end);
+        var offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+
   Widget _buildColumn() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Cleckbox(
-          isSelected: _isSelected,
-          onChanged: (bool val) {
-            // setState(() {
-            //   _isSelected = val;
-            // });
-          },
+        RaisedButton(
+          child: Text('Open About Page'),
+          onPressed: _openAboutPage,
+        ),
+        RaisedButton(
+          child: Text('Open Settings Page'),
+          onPressed: _openSettingsPage,
         ),
         TextField(
           controller: _textController,
@@ -157,9 +130,7 @@ class _HomePageState extends State<HomePage> {
         child: _buildColumn(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          widget.callback(!widget.isLogged);
-        },
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
