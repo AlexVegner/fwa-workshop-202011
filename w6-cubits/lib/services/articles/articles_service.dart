@@ -9,7 +9,7 @@ const _apiBaseUrl = 'https://newsapi.org/v2';
 const _everythingEndpoint = '$_apiBaseUrl/everything';
 
 abstract class ArticlesService {
-  Future<List<Article>> getNews();
+  Future<List<Article>> getNews({String from});
 }
 
 class ArticlesServiceImpl implements ArticlesService {
@@ -17,11 +17,10 @@ class ArticlesServiceImpl implements ArticlesService {
   ArticlesServiceImpl({@required this.client});
 
   @override
-  Future<List<Article>> getNews({
-    String tag = 'bitcoin',
-    String from = '2020-12-29',
-    String sortBy = 'publishedAt',
-  }) async {
+  Future<List<Article>> getNews(
+      {String tag = 'bitcoin',
+      String from = '2020-11-15',
+      String sortBy = 'publishedAt'}) async {
     final quety = mapToQuery({
       'q': tag,
       'from': from,

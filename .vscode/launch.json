@@ -23,6 +23,12 @@
       "type": "dart"
     },
     {
+      "name": "w6-cubits",
+      "cwd": "w6-cubits",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
       "name": "widgets",
       "cwd": "widgets",
       "request": "launch",
